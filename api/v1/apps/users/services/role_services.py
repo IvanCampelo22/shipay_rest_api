@@ -8,7 +8,6 @@ from api.v1.apps.users.repository.role_repository import RoleRepository
 from api.v1.factories.interfaces.crud_interface import CrudInterface
 from api.v1.apps.users.schemas.role_schemas import RoleRead
 
-from database.session import async_session
 from core.logger_config import logger
 
 
@@ -17,13 +16,11 @@ class RoleCrudService(CrudInterface):
     def __init__(self):
         self.repository = RoleRepository()
 
-    @async_session
     async def create(self, session, args: Dict[str, any]) -> Dict[str, str]:
         new_role = await self.repository.create(session=session, args=args)
         logger.success("Novo perfil de acesso criado com sucesso")
         return {"id": str(new_role.id)}
 
-    @async_session
     async def read(self, session) -> List[RoleRead]:
         role = await self.repository.list(session=session)
         if not role:
@@ -31,7 +28,6 @@ class RoleCrudService(CrudInterface):
 
         return role
     
-    @async_session 
     async def update(self, session, role_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
         role_data = await self.repository.get_by_id(session=session, role_id=role_id)
         if not role_data:
@@ -48,7 +44,6 @@ class RoleCrudService(CrudInterface):
         return {"message": f"perfil de acesso {role_data.id}: atualizado com sucesso"}
     
 
-    @async_session
     async def delete(self, session, role_id: int) -> Dict[str, str]:
         role_object = await self.repository.get_by_id(session=session, role_id=role_id)
 

@@ -8,7 +8,6 @@ from api.v1.apps.users.repository.user_repository import UserRepository
 from api.v1.factories.interfaces.crud_interface import CrudInterface
 from api.v1.apps.users.schemas.user_schemas import UserRead
 
-from database.session import async_session
 from core.logger_config import logger
 
 
@@ -17,13 +16,11 @@ class UserCrudService(CrudInterface):
     def __init__(self):
         self.repository = UserRepository()
 
-    @async_session
     async def create(self, session, args: Dict[str, any]) -> Dict[str, str]:
         new_role = await self.repository.create(session=session, args=args)
         logger.success("Novo usuário criado com sucesso")
         return {"id": str(new_role.id)}
 
-    @async_session
     async def read(self, session) -> List[UserRead]:
         role = await self.repository.list(session=session)
         if not role:
@@ -31,7 +28,6 @@ class UserCrudService(CrudInterface):
 
         return role
     
-    @async_session 
     async def update(self, session, users_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
         users_data = await self.repository.get_by_id(session=session, user_id=users_id)
         if not users_data:
@@ -48,7 +44,6 @@ class UserCrudService(CrudInterface):
         return {"message": f"usuário {users_data.id}: atualizado com sucesso"}
     
 
-    @async_session
     async def delete(self, session, users_id: int) -> Dict[str, str]:
         users_object = await self.repository.get_by_id(session=session, users_id=users_id)
 

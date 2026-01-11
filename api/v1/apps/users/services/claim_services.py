@@ -8,7 +8,6 @@ from api.v1.apps.users.repository.claim_repository import ClaimRepository
 from api.v1.factories.interfaces.crud_interface import CrudInterface
 from api.v1.apps.users.schemas.claim_schemas import ClaimRead
 
-from database.session import async_session
 from core.logger_config import logger
 
 
@@ -17,13 +16,11 @@ class ClaimCrudService(CrudInterface):
     def __init__(self):
         self.repository = ClaimRepository()
 
-    @async_session
     async def create(self, session, args: Dict[str, any]) -> Dict[str, str]:
         new_claim = await self.repository.create(session=session, args=args)
         logger.success("Nova declaração registrada com sucesso")
         return {"id": str(new_claim.id)}
 
-    @async_session
     async def read(self, session) -> List[ClaimRead]:
         claim = await self.repository.list(session=session)
         if not claim:
@@ -31,7 +28,6 @@ class ClaimCrudService(CrudInterface):
 
         return claim
     
-    @async_session 
     async def update(self, session, claim_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
         claim_data = await self.repository.get_by_id(session=session, claim_id=claim_id)
         if not claim_data:
@@ -48,7 +44,6 @@ class ClaimCrudService(CrudInterface):
         return {"message": f"declaração {claim_data.id}: atualizada com sucesso"}
     
 
-    @async_session
     async def delete(self, session, claim_id: int) -> Dict[str, str]:
         claim_object = await self.repository.get_by_id(session=session, claim_id=claim_id)
 
