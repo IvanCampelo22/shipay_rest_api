@@ -2,26 +2,18 @@ import ssl
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# from core.config import settings
+from core.config import settings
 
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
-# DATABASE_URL = (
-#     f"postgresql+asyncpg://{settings.DB_USER}:"
-#     f"{settings.DB_PASSWORD}"
-#     f"@{settings.DB_HOST}:"
-#     f"{settings.DB_PORT}/"
-#     f"{settings.DB_NAME}"
-# )
-
 DATABASE_URL = (
-    f"postgresql+asyncpg://postgres:"
-    f"12345678"
-    f"@localhost:"
-    f"5432/"
-    f"postgres"
+    f"postgresql+asyncpg://{settings.DB_USER}:"
+    f"{settings.DB_PASSWORD}"
+    f"@{settings.DB_HOST}:"
+    f"{settings.DB_PORT}/"
+    f"{settings.DB_NAME}"
 )
 
 print(DATABASE_URL)
@@ -31,7 +23,7 @@ engine = create_async_engine(
     pool_pre_ping=True,
     echo=True,
     connect_args={
-        "password": "12345678",
+        "password": settings.DB_PASSWORD,
         "ssl": ssl_context,
     },
 )

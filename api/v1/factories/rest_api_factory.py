@@ -1,7 +1,7 @@
 from api.v1.factories.factory import APIFactory
 from api.v1.apps.users.services.claim_services import ClaimCrudService
 from api.v1.apps.users.services.role_services import RoleCrudService 
-from api.v1.apps.users.services.users_services import UsersCrudService
+from api.v1.apps.users.services.users_services import UserCrudService
 
 
 class RestAPIFactory(APIFactory): 
@@ -16,4 +16,4 @@ class RestAPIFactory(APIFactory):
             case "role":
                 return RoleCrudService()
             case "users":
-                return UsersCrudService()
+                return UserCrudService()

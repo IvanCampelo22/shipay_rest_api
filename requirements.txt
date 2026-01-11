@@ -3,6 +3,7 @@ psycopg2-binary==2.9.9
 fastapi==0.95.0
 SQLAlchemy==2.0.15
 uvicorn==0.22.0
+gunicorn
 loguru==0.5.3
 async-generator==1.10
 attrs==23.1.0
@@ -55,3 +56,5 @@ pandas
 openpyxl
 xlsxwriter
 slowapi==0.1.9
+greenlet>=3.0
+
