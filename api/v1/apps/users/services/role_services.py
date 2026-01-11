@@ -1,0 +1,61 @@
+from fastapi import HTTPException, status
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from typing import List, Dict, Optional
+
+from api.v1.apps.users.repository.role_repository import RoleRepository
+from api.v1.factories.interfaces.crud_interface import CrudInterface
+from api.v1.apps.users.schemas.role_schemas import RoleRead
+
+from database.session import async_session
+from core.logger_config import logger
+
+
+class RoleCrudService(CrudInterface):
+
+    def __init__(self):
+        self.repository = RoleRepository(session=AsyncSession)
+
+    @async_session
+    async def create(self, args: Dict[str, any]) -> Dict[str, str]:
+        new_role = await self.repository.create(args=args)
+        logger.success("Novo perfil de acesso criado com sucesso")
+        return {"id": str(new_role.id)}
+
+    @async_session
+    async def read(self) -> List[RoleRead]:
+        role = await self.repository.list()
+        if not role:
+            logger.info("Nenhum perfil de acesso encontrado.")
+
+        return role
+    
+    @async_session 
+    async def update(self, role_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
+        role_data = await self.repository.get_by_id(role_id)
+        if not role_data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="perfil de acesso não encontrado."
+            )
+
+        for key, value in data.items():
+            if value is not None and hasattr(role_data, key):
+                setattr(role_data, key, value)
+
+        await self.repository.update(role_id=role_id, data=role_data)
+        return {"message": f"perfil de acesso {role_data.id}: atualizado com sucesso"}
+    
+
+    @async_session
+    async def delete(self, role_id: int) -> Dict[str, str]:
+        role_object = await self.repository.get_by_id(role_id==role_id)
+
+        if role_object is None:
+            raise HTTPException(status_code=404, detail="perfil de acesso não encontrado.")
+
+        await self.repository.delete(role=role_id)
+        return {"message": f"perfil de acesso {role_object.description}: deletado com sucesso"}
+        
+    
