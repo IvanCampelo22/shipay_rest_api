@@ -17,7 +17,7 @@ class ClaimCrudService(CrudInterface):
         self.repository = ClaimRepository()
 
     async def create(self, session, args: Dict[str, any]) -> Dict[str, str]:
-        new_claim = await self.repository.create(session=session, args=args)
+        new_claim = await self.repository.create(session=session, claim=args)
         logger.success("Nova declaração registrada com sucesso")
         return {"id": str(new_claim.id)}
 
