@@ -2,7 +2,7 @@ from sqlalchemy import Column, BigInteger, String, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 from api.v1.apps.users.models.association_tables import user_claims
 
-Base = declarative_base()
+from database.session import Base
 
 class Claim(Base):
     __tablename__ = "claims"

@@ -6,7 +6,8 @@ from api.v1.apps.users.models.claim_models import Claim
 # TODO add session in __init__ method
 class ClaimRepository:
 
-    async def create(self, session, claim: Claim):
+    async def create(self, session, data: dict) -> Claim:
+        claim = Claim(**data)
         session.add(claim)
         await session.commit()
         await session.refresh(claim)

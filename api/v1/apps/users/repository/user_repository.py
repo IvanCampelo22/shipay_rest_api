@@ -1,13 +1,21 @@
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from api.v1.apps.users.models.user_models import User
-from sqlalchemy import update
-
+from sqlalchemy import update, insert
+from api.v1.apps.users.models.association_tables import user_claims
+from typing import Any
 
 # TODO add session in __init__ method
 class UserRepository:
 
-    async def create(self, session, user: User):
+    async def add_claim(self, session, user_id: int, claim_id: int):
+        await session.execute(
+            insert(user_claims).values(user_id=user_id, claim_id=claim_id)
+        )
+        await session.commit()
+
+    async def create(self, session, data: dict) -> User:
+        user = User(**data)
         session.add(user)
         await session.commit()
         await session.refresh(user)

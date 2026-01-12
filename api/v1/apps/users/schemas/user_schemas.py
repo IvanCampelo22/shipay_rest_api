@@ -22,3 +22,24 @@ class UserRead(UserBase):
 
     class Config:
         orm_mode = True
+
+class requestdetails(BaseModel):
+    email:str
+    password:str
+        
+class TokenUsersSchema(BaseModel):
+    access: str
+    refresh: str
+
+class changepassword(BaseModel):
+    email:str
+    old_password:str
+    new_password:str
+
+class resetpassword(BaseModel):
+    email:str
+    new_password:str
+
+class ResetPasswordConfirm(BaseModel):
+    code: str
+    new_password: str

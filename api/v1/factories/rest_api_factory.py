@@ -2,6 +2,7 @@ from api.v1.factories.factory import APIFactory
 from api.v1.apps.users.services.claim_services import ClaimCrudService
 from api.v1.apps.users.services.role_services import RoleCrudService 
 from api.v1.apps.users.services.users_services import UserCrudService
+from api.v1.apps.users.services.authentication import UsersAuthenticationService
 
 
 class RestAPIFactory(APIFactory): 
@@ -17,3 +18,8 @@ class RestAPIFactory(APIFactory):
                 return RoleCrudService()
             case "users":
                 return UserCrudService()
+    
+    def authentication(self, type):
+        match type:
+            case "authentication":
+                return UsersAuthenticationService()

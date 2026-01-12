@@ -17,7 +17,7 @@ class RoleCrudService(CrudInterface):
         self.repository = RoleRepository()
 
     async def create(self, session, args: Dict[str, any]) -> Dict[str, str]:
-        new_role = await self.repository.create(session=session, role=args)
+        new_role = await self.repository.create(session=session, data=args)
         logger.success("Novo perfil de acesso criado com sucesso")
         return {"id": str(new_role.id)}
 

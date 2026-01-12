@@ -57,4 +57,5 @@ openpyxl
 xlsxwriter
 slowapi==0.1.9
 greenlet>=3.0
-
+passlib==1.7.4 
+bcrypt==3.2.2

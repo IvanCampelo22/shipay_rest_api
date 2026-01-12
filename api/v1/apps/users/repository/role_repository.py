@@ -6,11 +6,12 @@ from sqlalchemy import update
 # TODO add session in __init__ method
 class RoleRepository:
 
-    async def create(self, session, role: Role):
-        session.add(role)
+    async def create(self, session, data: dict) -> Role:
+        user = Role(**data)
+        session.add(user)
         await session.commit()
-        await session.refresh(role)
-        return role
+        await session.refresh(user)
+        return user
 
     async def get_by_id(self, session, role_id: int):
         result = await session.execute(select(Role).where(Role.id == role_id))

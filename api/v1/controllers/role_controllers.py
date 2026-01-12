@@ -9,11 +9,11 @@ from database.session import get_async_session
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.v1.factories.rest_api_factory  import RestAPIFactory
-from api.v1.factories.factory import APIFactory
+from api.v1.apps.users.schemas.role_schemas import RoleCreate, RoleBase
 from api.v1.apps.users.services.role_services import RoleCrudService
-from api.v1.apps.users.schemas.role_schemas import RoleCreate, RoleRead, RoleBase
-
+from api.v1.factories.rest_api_factory  import RestAPIFactory
+from api.v1.apps.users.auth.auth_utils import JWTBearer
+from api.v1.factories.factory import APIFactory
 
 router = APIRouter()
 app = FastAPI()
@@ -28,7 +28,7 @@ crud: RoleCrudService = factory.crud("role")
 
 @limiter.limit("10/minute")
 @router.post('/create-role/', status_code=status.HTTP_201_CREATED)
-async def create_role(request:Request, claim: RoleCreate, session: AsyncSession = Depends(get_async_session),):
+async def create_role(request:Request, claim: RoleCreate, session: AsyncSession = Depends(get_async_session), _=Depends(JWTBearer())):
     try: 
 
         role_data_create = claim.dict() 
@@ -43,7 +43,7 @@ async def create_role(request:Request, claim: RoleCreate, session: AsyncSession 
 
 @limiter.limit("10/minute")
 @router.get('/get-role/', status_code=status.HTTP_200_OK)
-async def get_role(request:Request, session: AsyncSession = Depends(get_async_session),):
+async def get_role(request:Request, session: AsyncSession = Depends(get_async_session), _=Depends(JWTBearer())):
     try:
 
         return await crud.read(session=session)
@@ -57,7 +57,7 @@ async def get_role(request:Request, session: AsyncSession = Depends(get_async_se
    
 @limiter.limit("10/minute")
 @router.put('/update-role/{role_id}/', status_code=status.HTTP_200_OK)
-async def update_role(request:Request, role_id: str, role: RoleBase, session: AsyncSession = Depends(get_async_session),):
+async def update_role(request:Request, role_id: str, role: RoleBase, session: AsyncSession = Depends(get_async_session), _=Depends(JWTBearer())):
     try:
 
         role_data_update = role.dict(exclude_unset=True) 
@@ -72,7 +72,7 @@ async def update_role(request:Request, role_id: str, role: RoleBase, session: As
     
 @limiter.limit("10/minute")
 @router.delete('/delete-role/{role_id}/',status_code=status.HTTP_200_OK)
-async def delete_role(request:Request, role_id: str, session: AsyncSession = Depends(get_async_session),):
+async def delete_role(request:Request, role_id: str, session: AsyncSession = Depends(get_async_session), _=Depends(JWTBearer())):
     try:
 
         return await crud.delete(session=session, role_id=role_id)
