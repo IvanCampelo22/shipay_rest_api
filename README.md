@@ -1,7 +1,6 @@
 # Shipay-Challenge | Back-End
 
 
-
 ## Tecnologias Usadas
 
 - Python
@@ -86,4 +85,4 @@
 
 > alembic upgrade head
 
-### Obs: consulte a documentação do alembic para entender como fazer a migração no banco de dados, pois se trata de algo um tanto complexo. 
+### Obs: para que as migrações funcionem, é necessário ir até o arquivo alembic.ini e na variável sqlalchemy.url (linha 63), adicionar a url do seu banco de dados
