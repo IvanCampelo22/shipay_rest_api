@@ -29,19 +29,22 @@ class ClaimCrudService(CrudInterface):
         return claim
     
     async def update(self, session, claim_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
-        claim_data = await self.repository.get_by_id(session=session, claim_id=claim_id)
-        if not claim_data:
+        claim = await self.repository.get_by_id(session=session, claim_id=claim_id)
+
+        if not claim:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="declaração não encontrada."
             )
 
         for key, value in data.items():
-            if value is not None and hasattr(claim_data, key):
-                setattr(claim_data, key, value)
+            if value is not None and hasattr(claim, key):
+                setattr(claim, key, value)
 
-        await self.repository.update(session=session, claim_id=claim_id, data=claim_data)
-        return {"message": f"declaração {claim_data.id}: atualizada com sucesso"}
+        await session.commit()
+        await session.refresh(claim)
+
+        return {"message": f"declaração {claim.id}: atualizada com sucesso"}
     
 
     async def delete(self, session, claim_id: int) -> Dict[str, str]:
@@ -50,7 +53,7 @@ class ClaimCrudService(CrudInterface):
         if claim_object is None:
             raise HTTPException(status_code=404, detail="declaração não encontrada.")
 
-        await self.repository.delete(session=session, claim=claim_id)
+        await self.repository.delete(session=session, claim=claim_object)
         return {"message": f"declaração {claim_object.description}: deletada com sucesso"}
         
     

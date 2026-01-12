@@ -29,19 +29,23 @@ class RoleCrudService(CrudInterface):
         return role
     
     async def update(self, session, role_id: int, data: Dict[str, Optional[str]]) -> Dict[str, str]:
-        role_data = await self.repository.get_by_id(session=session, role_id=role_id)
-        if not role_data:
+        role = await self.repository.get_by_id(session=session, role_id=role_id)
+
+        if not role:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="perfil de acesso não encontrado."
             )
 
         for key, value in data.items():
-            if value is not None and hasattr(role_data, key):
-                setattr(role_data, key, value)
+            if value is not None and hasattr(role, key):
+                setattr(role, key, value)
 
-        await self.repository.update(session=session, role_id=role_id, data=role_data)
-        return {"message": f"perfil de acesso {role_data.id}: atualizado com sucesso"}
+        await session.commit()
+        await session.refresh(role)
+
+        return {"message": f"perfil de acesso {role.id}: atualizado com sucesso"}
+
     
 
     async def delete(self, session, role_id: int) -> Dict[str, str]:
@@ -50,7 +54,7 @@ class RoleCrudService(CrudInterface):
         if role_object is None:
             raise HTTPException(status_code=404, detail="perfil de acesso não encontrado.")
 
-        await self.repository.delete(role=role_id)
+        await self.repository.delete(role=role_object)
         return {"message": f"perfil de acesso {role_object.description}: deletado com sucesso"}
         
     

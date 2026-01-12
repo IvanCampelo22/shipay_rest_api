@@ -3,6 +3,7 @@ from api.v1.apps.users.services.claim_services import ClaimCrudService
 from api.v1.apps.users.services.role_services import RoleCrudService 
 from api.v1.apps.users.services.users_services import UserCrudService
 from api.v1.apps.users.services.authentication import UsersAuthenticationService
+from api.v1.apps.users.services.filters_services import UserFilterService
 
 
 class RestAPIFactory(APIFactory): 
@@ -23,3 +24,8 @@ class RestAPIFactory(APIFactory):
         match type:
             case "authentication":
                 return UsersAuthenticationService()
+            
+    def filters(self, type):
+        match type:
+            case "filters_users":
+                return UserFilterService()

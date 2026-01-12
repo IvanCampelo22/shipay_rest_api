@@ -12,8 +12,17 @@ class UserCreate(UserBase):
     password: str
     role_id: int
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role_id: Optional[int] = None 
+    is_active: Optional[bool] = None
+
 class UserRead(UserBase):
     id: int
+    name: str 
+    email: str
+    is_active: bool
     created_at: date
     updated_at: Optional[date]
 
