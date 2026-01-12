@@ -86,3 +86,22 @@
 > alembic upgrade head
 
 ### Obs: para que as migrações funcionem, é necessário ir até o arquivo alembic.ini e na variável sqlalchemy.url (linha 63), adicionar a url do seu banco de dados
+
+
+# Autenticação da API 
+
+1. O primeiro passo para utilizar a REST API é indo até o endpoint users/login, inserir seu email e senha
+
+![Endpoint Login](doc_images/login_endpoint.png)
+
+2. Com isso, um token de acesso será gerado, um de acesso e outro de refresh.
+
+![Token](doc_images/token.png)
+
+3. Em quase todos os endpoints é possível ver um código na lateral direita. Para utilizar o token de acesso, basta clicar em qualquer deles, e surgira um popup para inserção do token. 
+
+![Use Token](doc_images/use_token.png)
+
+4. Ao inserir e clicar em Authorize, toda a API será liberada e está pronta para utilização. 
+
+![Use Token](doc_images/authorized_api.png)
